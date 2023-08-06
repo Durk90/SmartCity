@@ -35,8 +35,7 @@ public class MainControllerGUI {
         JButton consumeEnergyButton = new JButton("Consume Energy");
         JButton generateEnergyButton = new JButton("Generate Energy");
         JLabel resultLabel = new JLabel("Result: ");
-        energyStoredLabel = new JLabel("Energy Stored: 0.0");
-        
+        energyStoredLabel = new JLabel("Energy Stored: 0.0");        
 
         // Button action listeners
         storeEnergyButton.addActionListener(new ActionListener() {
