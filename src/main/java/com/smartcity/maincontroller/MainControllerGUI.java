@@ -38,20 +38,28 @@ public class MainControllerGUI {
         JLabel resultLabel = new JLabel("Result: ");
         energyStoredLabel = new JLabel("Energy Stored: 0.0");
 
-        // Button action listeners
+        // Button action listeners with error handling
         storeEnergyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double energyAmount = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter energy amount to store:"));
-                StoreEnergyRequest request = StoreEnergyRequest.newBuilder().setEnergyAmount(energyAmount).build();
-                StoreEnergyResponse response = energyStorageStub.storeEnergy(request);
+                try {
+                    double energyAmount = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter energy amount to store:"));
+                    StoreEnergyRequest request = StoreEnergyRequest.newBuilder().setEnergyAmount(energyAmount).build();
+                    StoreEnergyResponse response = energyStorageStub.storeEnergy(request);
 
-                if (response.getSuccess()) {
-                    currentEnergyStored += energyAmount;
-                    energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
-                    resultLabel.setText("Result: Energy stored successfully!");
-                } else {
-                    resultLabel.setText("Result: Failed to store energy.");
+                    if (response.getSuccess()) {
+                        currentEnergyStored += energyAmount;
+                        energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
+                        resultLabel.setText("Result: Energy stored successfully!");
+                    } else {
+                        resultLabel.setText("Result: Failed to store energy.");
+                    }
+                } catch (NumberFormatException ex) {
+                    resultLabel.setText("Result: Invalid input. Please enter a valid energy amount.");
+                } catch (Exception ex) {
+                    resultLabel.setText("Result: Error while storing energy: " + ex.getMessage());
+                    // Optionally, log the exception details
+                    ex.printStackTrace();
                 }
             }
         });
@@ -59,16 +67,24 @@ public class MainControllerGUI {
         consumeEnergyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double energyAmount = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter energy amount to consume:"));
-                ConsumeEnergyRequest request = ConsumeEnergyRequest.newBuilder().setEnergyAmount(energyAmount).build();
-                ConsumeEnergyResponse response = energyConsumptionStub.consumeEnergy(request);
+                try {
+                    double energyAmount = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter energy amount to consume:"));
+                    ConsumeEnergyRequest request = ConsumeEnergyRequest.newBuilder().setEnergyAmount(energyAmount).build();
+                    ConsumeEnergyResponse response = energyConsumptionStub.consumeEnergy(request);
 
-                if (response.getSuccess()) {
-                    currentEnergyStored -= energyAmount;
-                    energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
-                    resultLabel.setText("Result: Energy consumed successfully!");
-                } else {
-                    resultLabel.setText("Result: Insufficient energy for consumption!");
+                    if (response.getSuccess()) {
+                        currentEnergyStored -= energyAmount;
+                        energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
+                        resultLabel.setText("Result: Energy consumed successfully!");
+                    } else {
+                        resultLabel.setText("Result: Insufficient energy for consumption!");
+                    }
+                } catch (NumberFormatException ex) {
+                    resultLabel.setText("Result: Invalid input. Please enter a valid energy amount.");
+                } catch (Exception ex) {
+                    resultLabel.setText("Result: Error while consuming energy: " + ex.getMessage());
+                    // Optionally, log the exception details
+                    ex.printStackTrace();
                 }
             }
         });
@@ -76,46 +92,54 @@ public class MainControllerGUI {
         generateEnergyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String[] options = { "Solar Panels", "Wind Turbines" };
-                int selectedOption = JOptionPane.showOptionDialog(frame, "Select energy generation method:", "Generate Energy",
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                try {
+                    String[] options = { "Solar Panels", "Wind Turbines" };
+                    int selectedOption = JOptionPane.showOptionDialog(frame, "Select energy generation method:", "Generate Energy",
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
-                if (selectedOption == 0) { // Solar Panels
-                    double sunExposure = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter sun exposure:"));
-                    com.smartcity.solarpanels.GenerateEnergyRequest request = com.smartcity.solarpanels.GenerateEnergyRequest.newBuilder().setSunExposure(sunExposure).build();
-                    com.smartcity.solarpanels.GenerateEnergyResponse response = solarPanelsStub.generateEnergy(request);
-                    double energyGenerated = response.getEnergyGenerated();
+                    if (selectedOption == 0) { // Solar Panels
+                        double sunExposure = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter sun exposure:"));
+                        com.smartcity.solarpanels.GenerateEnergyRequest request = com.smartcity.solarpanels.GenerateEnergyRequest.newBuilder().setSunExposure(sunExposure).build();
+                        com.smartcity.solarpanels.GenerateEnergyResponse response = solarPanelsStub.generateEnergy(request);
+                        double energyGenerated = response.getEnergyGenerated();
 
-                    // Add the generated energy to storage
-                    StoreEnergyRequest storeRequest = StoreEnergyRequest.newBuilder().setEnergyAmount(energyGenerated).build();
-                    StoreEnergyResponse storeResponse = energyStorageStub.storeEnergy(storeRequest);
+                        // Add the generated energy to storage
+                        StoreEnergyRequest storeRequest = StoreEnergyRequest.newBuilder().setEnergyAmount(energyGenerated).build();
+                        StoreEnergyResponse storeResponse = energyStorageStub.storeEnergy(storeRequest);
 
-                    // Verify if energy is stored successfully
-                    if (storeResponse.getSuccess()) {
-                        currentEnergyStored += energyGenerated;
-                        energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
-                        resultLabel.setText("Result: Energy generated (Solar Panels) and stored: " + energyGenerated);
-                    } else {
-                        resultLabel.setText("Result: Failed to store energy (Solar Panels).");
+                        // Verify if energy is stored successfully
+                        if (storeResponse.getSuccess()) {
+                            currentEnergyStored += energyGenerated;
+                            energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
+                            resultLabel.setText("Result: Energy generated (Solar Panels) and stored: " + energyGenerated);
+                        } else {
+                            resultLabel.setText("Result: Failed to store energy (Solar Panels).");
+                        }
+                    } else if (selectedOption == 1) { // Wind Turbines
+                        double windSpeed = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter wind speed:"));
+                        com.smartcity.windturbines.GenerateEnergyRequest request = com.smartcity.windturbines.GenerateEnergyRequest.newBuilder().setWindSpeed(windSpeed).build();
+                        com.smartcity.windturbines.GenerateEnergyResponse response = windTurbinesStub.generateEnergy(request);
+                        double energyGenerated = response.getEnergyGenerated();
+
+                        // Add the generated energy to storage
+                        StoreEnergyRequest storeRequest = StoreEnergyRequest.newBuilder().setEnergyAmount(energyGenerated).build();
+                        StoreEnergyResponse storeResponse = energyStorageStub.storeEnergy(storeRequest);
+
+                        // Verify if energy is stored successfully
+                        if (storeResponse.getSuccess()) {
+                            currentEnergyStored += energyGenerated;
+                            energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
+                            resultLabel.setText("Result: Energy generated (Wind Turbines) and stored: " + energyGenerated);
+                        } else {
+                            resultLabel.setText("Result: Failed to store energy (Wind Turbines).");
+                        }
                     }
-                } else if (selectedOption == 1) { // Wind Turbines
-                    double windSpeed = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter wind speed:"));
-                    com.smartcity.windturbines.GenerateEnergyRequest request = com.smartcity.windturbines.GenerateEnergyRequest.newBuilder().setWindSpeed(windSpeed).build();
-                    com.smartcity.windturbines.GenerateEnergyResponse response = windTurbinesStub.generateEnergy(request);
-                    double energyGenerated = response.getEnergyGenerated();
-
-                    // Add the generated energy to storage
-                    StoreEnergyRequest storeRequest = StoreEnergyRequest.newBuilder().setEnergyAmount(energyGenerated).build();
-                    StoreEnergyResponse storeResponse = energyStorageStub.storeEnergy(storeRequest);
-
-                    // Verify if energy is stored successfully
-                    if (storeResponse.getSuccess()) {
-                        currentEnergyStored += energyGenerated;
-                        energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
-                        resultLabel.setText("Result: Energy generated (Wind Turbines) and stored: " + energyGenerated);
-                    } else {
-                        resultLabel.setText("Result: Failed to store energy (Wind Turbines).");
-                    }
+                } catch (NumberFormatException ex) {
+                    resultLabel.setText("Result: Invalid input. Please enter a valid numeric value.");
+                } catch (Exception ex) {
+                    resultLabel.setText("Result: Error while generating energy: " + ex.getMessage());
+                    // Optionally, log the exception details
+                    ex.printStackTrace();
                 }
             }
         });
