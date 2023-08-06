@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.smartcity.windturbines";
+option java_outer_classname = "WindTurbinesProto";
+
+package windturbines;
+
+// Interface exported by the Wind Turbines service.
+service WindTurbines {
+  rpc generateEnergy(GenerateEnergyRequest) returns (GenerateEnergyResponse) {}
+}
+
+message GenerateEnergyRequest {
+  double windSpeed = 1;
+}
+
+message GenerateEnergyResponse {
+  double energyGenerated = 1;
+}

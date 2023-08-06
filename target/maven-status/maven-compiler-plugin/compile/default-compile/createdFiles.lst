@@ -1,0 +1,4 @@
+com\smartcity\energystorage\EnergyStorageGrpc$1.class
+com\smartcity\windturbines\WindTurbinesGrpc$1.class
+com\smartcity\energyconsumption\EnergyConsumptionGrpc$1.class
+com\smartcity\solarpanels\SolarPanelsGrpc$1.class

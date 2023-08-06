@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.smartcity.energystorage";
+option java_outer_classname = "EnergyStorageProto";
+
+package energystorage;
+
+// Interface exported by the Energy Storage service.
+service EnergyStorage {
+  rpc storeEnergy(StoreEnergyRequest) returns (StoreEnergyResponse) {}
+}
+
+message StoreEnergyRequest {
+  double energyAmount = 1;
+}
+
+message StoreEnergyResponse {
+  bool success = 1;
+}

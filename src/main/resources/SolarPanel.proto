@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.smartcity.solarpanels";
+option java_outer_classname = "SolarPanelsProto";
+
+package solarpanels;
+
+// Interface exported by the Solar Panels service.
+service SolarPanels {
+  rpc generateEnergy(GenerateEnergyRequest) returns (GenerateEnergyResponse) {}
+}
+
+message GenerateEnergyRequest {
+  double sunExposure = 1;
+}
+
+message GenerateEnergyResponse {
+  double energyGenerated = 1;
+}
