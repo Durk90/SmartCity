@@ -5,7 +5,7 @@ import io.grpc.stub.StreamObserver;
 
 public class EnergyStorageImpl extends EnergyStorageGrpc.EnergyStorageImplBase {
 
-    private double storedEnergy = 0.0;
+    public double storedEnergy = 0.0;
 
     @Override
     public void storeEnergy(StoreEnergyRequest request, StreamObserver<StoreEnergyResponse> responseObserver) {

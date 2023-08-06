@@ -18,7 +18,6 @@ public class EnergyConsumptionServer {
 
         System.out.println("Energy Consumption Server started on port " + port);
 
-        // Keep the main thread alive by waiting indefinitely
         // The server will continue running until it is explicitly shut down.
         server.awaitTermination();
     }

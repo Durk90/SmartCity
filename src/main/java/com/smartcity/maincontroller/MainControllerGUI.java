@@ -17,6 +17,7 @@ public class MainControllerGUI {
     private SolarPanelsGrpc.SolarPanelsBlockingStub solarPanelsStub;
     private WindTurbinesGrpc.WindTurbinesBlockingStub windTurbinesStub;
     private JLabel energyStoredLabel; // New label for displaying energy storage
+    private double currentEnergyStored = 0.0; // Class-level variable to hold the current energy value
 
     public MainControllerGUI() {
         frame = new JFrame("Smart City Main Controller");
@@ -35,8 +36,7 @@ public class MainControllerGUI {
         JButton consumeEnergyButton = new JButton("Consume Energy");
         JButton generateEnergyButton = new JButton("Generate Energy");
         JLabel resultLabel = new JLabel("Result: ");
-        energyStoredLabel = new JLabel("Energy Stored: 0.0");        
-        
+        energyStoredLabel = new JLabel("Energy Stored: 0.0");
 
         // Button action listeners
         storeEnergyButton.addActionListener(new ActionListener() {
@@ -47,7 +47,6 @@ public class MainControllerGUI {
                 StoreEnergyResponse response = energyStorageStub.storeEnergy(request);
 
                 if (response.getSuccess()) {
-                    double currentEnergyStored = Double.parseDouble(energyStoredLabel.getText().substring("Energy Stored: ".length()));
                     currentEnergyStored += energyAmount;
                     energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
                     resultLabel.setText("Result: Energy stored successfully!");
@@ -65,6 +64,8 @@ public class MainControllerGUI {
                 ConsumeEnergyResponse response = energyConsumptionStub.consumeEnergy(request);
 
                 if (response.getSuccess()) {
+                    currentEnergyStored -= energyAmount;
+                    energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
                     resultLabel.setText("Result: Energy consumed successfully!");
                 } else {
                     resultLabel.setText("Result: Insufficient energy for consumption!");
@@ -91,7 +92,6 @@ public class MainControllerGUI {
 
                     // Verify if energy is stored successfully
                     if (storeResponse.getSuccess()) {
-                        double currentEnergyStored = Double.parseDouble(energyStoredLabel.getText().substring("Energy Stored: ".length()));
                         currentEnergyStored += energyGenerated;
                         energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
                         resultLabel.setText("Result: Energy generated (Solar Panels) and stored: " + energyGenerated);
@@ -110,7 +110,6 @@ public class MainControllerGUI {
 
                     // Verify if energy is stored successfully
                     if (storeResponse.getSuccess()) {
-                        double currentEnergyStored = Double.parseDouble(energyStoredLabel.getText().substring("Energy Stored: ".length()));
                         currentEnergyStored += energyGenerated;
                         energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
                         resultLabel.setText("Result: Energy generated (Wind Turbines) and stored: " + energyGenerated);
