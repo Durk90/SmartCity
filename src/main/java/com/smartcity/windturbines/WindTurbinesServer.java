@@ -12,7 +12,7 @@ public class WindTurbinesServer {
         WindTurbinesImpl windTurbinesService = new WindTurbinesImpl();
 
         // Create and start the gRPC server for Wind Turbines service
-        int port = 50054; // Set the desired port number
+        int port = 50054; // Set the port number
         server = ServerBuilder.forPort(port)
             .addService(windTurbinesService) // Add the Wind Turbines service
             .build();

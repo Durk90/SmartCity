@@ -10,7 +10,7 @@ public class EnergyConsumptionServer {
         EnergyConsumptionImpl energyConsumptionService = new EnergyConsumptionImpl();
 
         // Create and start the gRPC server for Energy Consumption service
-        int port = 50052; // Set the desired port number
+        int port = 50052; // Set the port number
         Server server = ServerBuilder.forPort(port)
             .addService(energyConsumptionService) // Add the Energy Consumption service
             .build();

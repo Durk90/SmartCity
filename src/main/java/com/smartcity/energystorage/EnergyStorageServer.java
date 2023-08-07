@@ -10,7 +10,7 @@ public class EnergyStorageServer {
         EnergyStorageImpl energyStorageService = new EnergyStorageImpl();
 
         // Create and start the gRPC server for Energy Storage service
-        int port = 50051; // Set the desired port number
+        int port = 50051; // Set the port number
         Server server = ServerBuilder.forPort(port)
             .addService(energyStorageService) // Add the Energy Storage service
             .build();

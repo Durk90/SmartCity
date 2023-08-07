@@ -12,7 +12,7 @@ public class SolarPanelsServer {
         SolarPanelsImpl solarPanelsService = new SolarPanelsImpl();
 
         // Create and start the gRPC server for Solar Panels service
-        int port = 50053; // Set the desired port number
+        int port = 50053; // Set the port number
         server = ServerBuilder.forPort(port)
             .addService(solarPanelsService) // Add the Solar Panels service
             .build();
