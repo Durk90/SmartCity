@@ -69,15 +69,23 @@ public class MainControllerGUI {
             public void actionPerformed(ActionEvent e) {
                 try {
                     double energyAmount = Double.parseDouble(JOptionPane.showInputDialog(frame, "Enter energy amount to consume:"));
-                    ConsumeEnergyRequest request = ConsumeEnergyRequest.newBuilder().setEnergyAmount(energyAmount).build();
-                    ConsumeEnergyResponse response = energyConsumptionStub.consumeEnergy(request);
 
-                    if (response.getSuccess()) {
-                        currentEnergyStored -= energyAmount;
-                        energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
-                        resultLabel.setText("Result: Energy consumed successfully!");
+                    // Validate that the energy amount is positive before consuming
+                    if (energyAmount > 0) {
+                        ConsumeEnergyRequest request = ConsumeEnergyRequest.newBuilder().setEnergyAmount(energyAmount).build();
+                        ConsumeEnergyResponse response = energyConsumptionStub.consumeEnergy(request);
+
+                        // Check if the current energy stored is greater than or equal to the required energy amount with a tolerance
+                        if (currentEnergyStored >= (energyAmount - 1e-9)) {
+                            // Adjust the tolerance value as per the precision requirement
+                            currentEnergyStored -= energyAmount;
+                            energyStoredLabel.setText("Energy Stored: " + currentEnergyStored);
+                            resultLabel.setText("Result: Energy consumed successfully!");
+                        } else {
+                            resultLabel.setText("Result: Insufficient energy for consumption!");
+                        }
                     } else {
-                        resultLabel.setText("Result: Insufficient energy for consumption!");
+                        resultLabel.setText("Result: Please enter a positive energy amount to consume.");
                     }
                 } catch (NumberFormatException ex) {
                     resultLabel.setText("Result: Invalid input. Please enter a valid energy amount.");
