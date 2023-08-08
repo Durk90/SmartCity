@@ -27,7 +27,7 @@ public class WindTurbinesImpl extends com.smartcity.windturbines.WindTurbinesGrp
         double windSpeed = request.getWindSpeed();
 
         // Simulate energy generation based on wind speed
-        double energyGenerated = windSpeed * 15; // A simple linear relationship (you can change this)
+        double energyGenerated = windSpeed * 15; // Simulate power conversion 
 
         GenerateEnergyResponse response = GenerateEnergyResponse.newBuilder().setEnergyGenerated(energyGenerated).build();
         responseObserver.onNext(response);

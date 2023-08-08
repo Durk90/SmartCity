@@ -27,7 +27,7 @@ public class SolarPanelsImpl extends SolarPanelsGrpc.SolarPanelsImplBase {
         double sunExposure = request.getSunExposure();
 
         // Simulate energy generation based on sun exposure
-        double energyGenerated = sunExposure * 10; // A simple linear relationship 
+        double energyGenerated = sunExposure * 10; // Simulate power conversion  
 
         GenerateEnergyResponse response = GenerateEnergyResponse.newBuilder().setEnergyGenerated(energyGenerated).build();
         responseObserver.onNext(response);
